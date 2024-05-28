@@ -1,0 +1,50 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.5'
+	id 'io.spring.dependency-management' version '1.1.4'
+
+}
+
+group = 'com.example'
+version = '0.0.1'
+
+java {
+	sourceCompatibility = '17'
+}
+
+repositories {
+	mavenCentral()
+}
+bootJar{
+	mainClass='com.example.NewWeb'
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	implementation 'org.springframework.boot:spring-boot-starter-mustache'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	implementation 'commons-io:commons-io:2.11.0'
+	implementation 'org.mariadb.jdbc:mariadb-java-client:3.3.3'
+	// log4j-slf4j-impl 제거
+	implementation ('org.springframework.boot:spring-boot-starter-logging') {
+		exclude group: 'org.springframework.boot', module: 'log4j-slf4j-impl'
+	}
+
+	// Selenium Java Dependency
+	implementation 'org.seleniumhq.selenium:selenium-java:4.21.0'
+
+	// WebDriverManager Dependency
+	implementation 'io.github.bonigarcia:webdrivermanager:5.8.0'
+
+	// Apache HttpClient 5.x
+	implementation 'org.apache.httpcomponents.client5:httpclient5:5.2.3'
+	implementation 'org.apache.httpcomponents.core5:httpcore5:5.2.3'
+	implementation 'org.apache.httpcomponents.core5:httpcore5-h2:5.2.3'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}

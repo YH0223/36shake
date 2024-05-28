@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="ko" >
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ckt_BookmarkIngre_html</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .Header {
+            width: 100%;
+            padding: 9px 24px 8px 12px;
+            background: #78DDFD;
+            border-bottom: 0.5px solid #E6E6E6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .SearchInput {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px 8px 12px;
+            background: rgba(255, 255, 255, 0.56);
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+        }
+
+        .SearchForm {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .InputField {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .SearchButton {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            border-left: none;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .SearchIcon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .RecentSearches {
+            display: none; /* 기본적으로 숨김 */
+            position: absolute;
+            top: 100%; /* 부모 요소의 아래에 위치 */
+            left: 0;
+            width: 100%;
+            background: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            border-radius: 0 0 8px 8px; /* 아래 모서리를 둥글게 */
+        }
+
+        .RecentSearches h2 {
+            font-size: 18px;
+            margin: 10px;
+        }
+
+        .RecentSearchList {
+            list-style: none;
+            padding: 0;
+            margin: 0 10px 10px 10px;
+        }
+
+        .RecentSearchList li {
+            margin-bottom: 5px;
+        }
+
+        .RecentSearchList a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        .RecentSearchList a:hover {
+            text-decoration: underline;
+        }
+
+        .Main {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .Main > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .Main img {
+            width: 158px;
+            height: 254px;
+            box-shadow: 1px 1px 7px -1px rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+        }
+
+        .Main div > div {
+            width: 114px;
+            height: 19px;
+            text-align: center;
+            color: black;
+            font-size: 14px;
+            line-height: 24px;
+            word-wrap: break-word;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .TabBar {
+            width: 100%; /* 부모 요소에 맞게 너비 설정 */
+            height: 75px;
+            background: white;
+            box-shadow: 0 -0.5px 0 rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            position: fixed; /* 변경된 부분: relative로 설정 */
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .Tabs {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 0 7px;
+        }
+
+        .TabBarItem {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 2px;
+            padding: 10px 27px 2px;
+            opacity: 0.5;
+        }
+
+        .TabBarItem img {
+            width: 23px;
+            height: 23px;
+        }
+
+        .TabBarItem div {
+            text-align: center;
+            color: black;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .TabBarItem:first-child {
+            opacity: 1;
+        }
+
+        .HomeIndicator {
+            width: 134px;
+            height: 5px;
+            background: black;
+            border-radius: 100px;
+            margin-top: 8px;
+        }
+
+        .Ckt_mini {
+            width: 30px;
+            height: 30px;
+        }
+
+        .BookmarkList {
+            width: 375px;
+            height: 70px;
+            position: absolute;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .BookmarkList img {
+            width: 70px;
+            height: 70px;
+        }
+
+        .BookmarkList div {
+            width: 305px;
+            height: 70px;
+            color: black;
+            font-size: 12px;
+            font-family: Inter;
+            font-weight: 400;
+            word-wrap: break-word;
+            display: flex;
+            align-items: center;
+        }
+
+        .Bookmark_menu_Bar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: whitesmoke;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .Bookmark_1,
+        .Bookmark_2 {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+            border: 1px solid black;
+            width: 50%;
+            height: 50px;
+        }
+
+        .Next_Back_Bar {
+            width: 100%;
+            height: 55px;
+            position: fixed;
+            bottom: 75px; /* Space for TabBar */
+            left: 0;
+            background: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .Next,
+        .Back {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 15px;
+            border: 1px solid black;
+            width: 50%;
+            height: 50px;
+        }
+
+        .BookmarkFrame {
+            width: 100%;
+            height: calc(100% - 50px); /* MenuBar 높이를 제외한 전체 높이 */
+            overflow-y: auto; /* 세로 스크롤 허용 */
+            position: relative; /* 상대 위치로 설정하여 하위 요소의 위치를 상대적으로 지정 */
+            padding-top: 50px; /* MenuBar의 높이만큼 여백 추가 */
+        }
+
+        .BookMarkList_Frame {
+            height: 100%; /* RecipeFrame의 전체 높이를 차지하도록 설정 */
+        }
+
+        .example {
+            width: 100%;
+            height: 60px;
+        }
+
+        .example img {
+            width: 40px;
+            height: 60px;
+            margin-left: 0;
+        }
+
+        .Next_Back_Wrapper {
+            position: relative;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputField = document.querySelector('.InputField');
+            const recentSearches = document.querySelector('.RecentSearches');
+
+            inputField.addEventListener('focus', function() {
+                recentSearches.style.display = 'block';
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!inputField.contains(event.target) && !recentSearches.contains(event.target)) {
+                    recentSearches.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<div class="Header">
+    <div class="recommenation">
+        <a href="/recommendation">
+            <span>사용자 재료에 따른 추천 칵테일 보러가기</span>
+        </a>
+    </div>
+    <img class="IcProfile1" src="/drawable/ic_profile.png" width="30" height="30"/>
+
+    <div class="Bookmark_menu_Bar">
+        <div class="Bookmark_1" onclick="location.href='/bookmarksckt'">칵테일</div>
+        <div class="Bookmark_2" onclick="location.href='/bookmarksig'">재료</div>
+    </div>
+</div>
+
+<div class="BookmarkFrame">
+    <!-- Bookmark Lists -->
+    <div class="BookMarkList_Frame">
+        <div id="bookmarkItemsContainer">
+            {{#bookmarksig}}
+                <div class='example'>
+                    <img src="/imageig?igid={{igid}}">
+                    <span>{{igkor}}</span>
+                    {{#igyes}}
+                        <a href="/setprice?igid={{igid}}" style="display: flex; justify-content: flex-end;" ><span>최저가 탐색</span></a>
+                    {{/igyes}}
+                    {{^igyes}}{{/igyes}}
+                </div>
+            {{/bookmarksig}}
+        </div>
+    </div>
+    <!-- Bookmark Menu Bar -->
+
+    <!-- Next/Back Bar -->
+
+</div>
+
+<div class="TabBar">
+    <div class="Next_Back_Bar" >
+        <div class="Back" style="width: 50%; height: 50px; position: relative">
+            {{#checkprev}}
+                <a href="/bookmarksig?page={{back}}"class="prevLink">이전</a>
+            {{/checkprev}}
+            {{^checkprev}}
+                이전
+            {{/checkprev}}
+        </div>
+        <div class="Next" style="width: 50%; height: 50px; position: relative">
+            {{#checknext}}
+                <a href="/bookmarksig?page={{next}}"  class="nextLink">다음</a>
+            {{/checknext}}
+            {{^checknext}}
+                다음
+            {{/checknext}}
+        </div>
+    </div>
+    <div class="Tabs">
+        <div class="TabBarItem" onclick="location.href='/main2'">
+            <img class="IcHome" src="/drawable/ic_home.png" />
+            <div>홈</div>
+        </div>
+        <div class="TabBarItem" onclick="location.href='/bookmarksckt'">
+            <img class="IcBookmark" src="/drawable/ic_bookmark.png" alt="My Image" />
+            <div>즐겨찾기</div>
+        </div>
+        <div class="TabBarItem" onclick="location.href='/recipes'">
+            <img class="IcCkt" src="/drawable/ic_ckt.png" />
+            <div>레시피</div>
+        </div>
+        <div class="TabBarItem" onclick="location.href='/settings'">
+            <img class="IcHome2" src="/drawable/ic_settings2.png" />
+            <div>설정</div>
+        </div>
+    </div>
+    <div class="HomeIndicator"></div>
+</div>
+</body>
+</html>

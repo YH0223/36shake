@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ckt_PriceRange_html</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+        }
+
+        #priceRangeForm {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+
+        .Header {
+            width: 100%;
+            padding: 9px 24px 8px 12px;
+            background: #78DDFD;
+            border-bottom: 0.5px solid #E6E6E6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            z-index: 1000;
+        }
+        .SearchInput {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px 8px 12px;
+            background: rgba(255, 255, 255, 0.56);
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+        }
+
+        .Search {
+            width: 150px;
+            height: 17px;
+            position: relative;
+        }
+
+        .Search .Vector {
+            position: absolute;
+            border: 2px solid #828282;
+        }
+
+        .Search .Vector:first-child {
+            width: 11.33px;
+            height: 11.33px;
+            left: 2.12px;
+            top: 2.12px;
+        }
+
+        .Search .Vector:last-child {
+            width: 3.08px;
+            height: 3.08px;
+            left: 11.79px;
+            top: 11.79px;
+        }
+
+        .TabBar {
+            width: 100%;
+            height: 75px;
+            background: white;
+            box-shadow: 0 -0.5px 0 rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            position: fixed;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .Tabs {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 0 7px;
+        }
+
+        .TabBarItem {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 2px;
+            padding: 10px 27px 2px;
+            opacity: 0.5;
+        }
+
+        .TabBarItem img {
+            width: 23px;
+            height: 23px;
+        }
+
+        .TabBarItem div {
+            text-align: center;
+            color: black;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .TabBarItem:first-child {
+            opacity: 1;
+        }
+
+        .HomeIndicator {
+            width: 134px;
+            height: 5px;
+            background: black;
+            border-radius: 100px;
+            margin-top: 8px;
+        }
+
+        .content {
+            padding: 70px 10px 85px 10px; /* 상단과 하단 고정된 메뉴 공간을 고려하여 패딩을 추가합니다 */
+            overflow-y: auto;
+            height: calc(100% - 155px); /* 상단과 하단 메뉴의 높이를 고려하여 높이를 계산합니다 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column; /* 요소들을 수직으로 정렬하기 위해 추가 */
+            width: 100%;
+        }
+
+        .Range_Frame {
+            border: 1px solid black;
+            padding: 20px;
+            margin: 10px; /* 각 frame 사이에 여백을 추가 */
+            width: 70%; /* 전체 화면의 가로의 70%만큼 차지 */
+            display: flex;
+            text-align: center;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .Range_Text {
+            font-size: 20px;
+            font-weight: 400;
+            color: black;
+            margin-bottom: 10px;
+        }
+
+        .Minimum_Input, .Maximum_Input {
+            width: 100%;
+            height: 50px;
+            background: #D9D9D9;
+            margin-bottom: 10px; /* 입력 요소 사이에 여백을 추가 */
+        }
+
+        .Submit_Button {
+            width: 20%; /* 전체 화면의 가로의 20%만큼 차지 */
+            height: 40px;
+            background: #D9D9D9;
+            margin: auto; /* 가로 중앙 정렬 */
+            margin-top: 20px; /* 버튼과 다른 요소 사이의 간격을 추가 */
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<!-- 상단 검색바 -->
+<div class="Header">
+    <div class="SearchInput">
+        <form name="searchform" action="#" method="get" onsubmit="return false;">
+            <input class="Search" type="text" id="searchInput" oninput="search()">
+            <button type="submit">검색</button>
+        </form>
+    </div>
+    <img class="IcProfile1" src="/drawable/ic_profile.png" width="30" height="30" />
+</div>
+
+<!-- 중간 콘텐츠 -->
+<main class="content">
+    <form id="priceRangeForm" method="GET">
+        <div class="Range_Frame">
+            <label for="minimumValue" class="Range_Text">최저가</label>
+            <input type="number" id="minimumValue" name="pricemin" class="Minimum_Input" required >
+        </div>
+
+        <div class="Range_Frame">
+            <label for="maximumValue" class="Range_Text">최고가</label>
+            <input type="number" id="maximumValue" name="pricemax" class="Maximum_Input" required>
+        </div>
+
+        <button type="submit" class="Submit_Button" >가격설정</button>
+    </form>
+</main>
+
+<!-- 하단 탭바 -->
+<div class="TabBar">
+    <div class="Tabs">
+        <div class="TabBarItem" onclick="location.href='/main2'">
+            <img class="IcHome" src="/drawable/ic_home.png" />
+            <div>홈</div>
+        </div>
+        <div class="TabBarItem" onclick="location.href='/bookmarksckt'">
+            <img class="IcBookmark" src="/drawable/ic_bookmark.png" alt="My Image" />
+            <div>즐겨찾기</div>
+        </div>
+        <div class="TabBarItem" onclick="location.href='/recipes'">
+            <img class="IcCkt" src="/drawable/ic_ckt.png" />
+            <div>레시피</div>
+        </div>
+        <div class="TabBarItem" onclick="location.href='/settings'">
+            <img class="IcHome2" src="/drawable/ic_settings2.png" />
+            <div>설정</div>
+        </div>
+    </div>
+    <div class="HomeIndicator"></div>
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var igid = "{{igid}}"; // Get igid value from template
+        var form = document.getElementById("priceRangeForm");
+        form.addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            var pricemin = document.getElementById("minimumValue").value; // Get pricemin value
+            var pricemax = document.getElementById("maximumValue").value; // Get pricemax value
+
+            // Redirect to the desired URL with all parameters
+            window.location.href = "/loadingData?id=" + igid + "&pricemin=" + pricemin + "&pricemax=" + pricemax;
+        });
+    });
+</script>
+</body>
+</html>

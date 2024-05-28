@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ckt_post_2_html</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+        .Frame1 {
+            width: 100%;
+            max-width: 375px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .Frame1 img {
+            width: 100%;
+            height: auto;
+        }
+        .Frame1 .Frame2, .Frame1 .Frame3 {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border-top: 1px solid #ccc;
+        }
+        .Frame1 .Frame2 > div, .Frame1 .Frame3 > div {
+            width: 90%;
+            max-width: 375px;
+            padding: 10px;
+            margin: 5px 0;
+            color: black;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            background: #fff;
+            word-wrap: break-word;
+        }
+        .Postid {
+            height: auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<div class="Frame1">
+    <img id="cocktailImage" class="Ckt_image" src="/image?drinkid={{cocktailData.drinkId}}" alt="Cocktail Image" />
+    <div class="Frame2">
+        <div class="Ckt_name">{{cocktailData.name}}</div>
+        <div class="Ckt_instruction">{{cocktailData.instructions}}</div>
+    </div>
+    <div class="Frame3">
+        {{#cocktailData.ingredients}}
+            <div>{{.}}</div>
+
+        {{/cocktailData.ingredients}}
+    </div>
+</div>
+</body>
+</html>

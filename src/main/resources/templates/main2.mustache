@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ckt_Main_html</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body,
+        html {
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+        .Header {
+            width: 100%;
+            padding: 9px 24px 8px 12px;
+            background: #78DDFD;
+            border-bottom: 0.5px solid #E6E6E6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .SearchInput {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px 8px 12px;
+            background: rgba(255, 255, 255, 0.56);
+            border-radius: 8px;
+            border: 1px solid #E0E0E0;
+        }
+
+        .SearchForm {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .InputField {
+            flex-grow: 1;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .SearchButton {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ccc;
+            border-left: none;
+            border-radius: 0 4px 4px 0;
+        }
+
+        .SearchIcon {
+            width: 24px;
+            height: 24px;
+        }
+        .RecentSearches {
+            display: none; /* 기본적으로 숨김 */
+            position: absolute;
+            top: 100%; /* 부모 요소의 아래에 위치 */
+            left: 0;
+            width: 100%;
+            background: #fff;
+            border: 1px solid #ccc;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            z-index: 10;
+            border-radius: 0 0 8px 8px; /* 아래 모서리를 둥글게 */
+        }
+        .RecentSearches h2 {
+            font-size: 18px;
+            margin: 10px;
+        }
+        .RecentSearchList {
+            list-style: none;
+            padding: 0;
+            margin: 0 10px 10px 10px;
+        }
+        .RecentSearchList li {
+            margin-bottom: 5px;
+        }
+        .RecentSearchList a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .RecentSearchList a:hover {
+            text-decoration: underline;
+        }
+
+        .MainFrame {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            height: calc(100% - 75px - 55px); /* 100% - Header height - TabBar height */
+        }
+        .MainFrame > div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+        .MainFrame img {
+            width: 100%;
+            max-width: 158px;
+            height: auto;
+            max-height: 254px;
+            box-shadow: 1px 1px 7px -1px rgba(0, 0, 0, 0.25);
+            border-radius: 10px;
+        }
+        .MainFrame div > div {
+            width: 100%;
+            max-width: 114px;
+            height: auto;
+            text-align: center;
+            color: black;
+            font-size: 14px;
+            line-height: 24px;
+            word-wrap: break-word;
+            white-space: nowrap; /* 줄바꿈 방지 */
+        }
+
+        .TabBar {
+            width: 100%;
+            height: 75px;
+            background: white;
+            box-shadow: 0 -0.5px 0 rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(20px);
+            position: absolute;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .Tabs {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            padding: 0 7px;
+        }
+
+        .TabBarItem {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 2px;
+            padding: 10px 27px 2px;
+            opacity: 0.5;
+            cursor: pointer;
+        }
+
+        .TabBarItem img {
+            width: 23px;
+            height: 23px;
+        }
+
+        .TabBarItem div {
+            text-align: center;
+            color: black;
+            font-size: 10px;
+            font-weight: 500;
+        }
+
+        .TabBarItem:first-child {
+            opacity: 1;
+        }
+
+        .HomeIndicator {
+            width: 134px;
+            height: 5px;
+            background: black;
+            border-radius: 100px;
+            margin-top: 8px;
+        }
+        .Ckt_mini{
+            width: 30px;
+            height: 30px;
+        }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputField = document.querySelector('.InputField');
+            const recentSearches = document.querySelector('.RecentSearches');
+
+            inputField.addEventListener('focus', function() {
+                recentSearches.style.display = 'block';
+            });
+
+            document.addEventListener('click', function(event) {
+                if (!inputField.contains(event.target) && !recentSearches.contains(event.target)) {
+                    recentSearches.style.display = 'none';
+                }
+            });
+
+            // 각 이미지 요소를 가져옵니다.
+            const cktImages = document.querySelectorAll('.MainFrame .Ckt_Recom_Img,.MainFrame .Ckt_mini');
+
+            // 각 이미지에 클릭 이벤트를 추가합니다.
+            cktImages.forEach(function(img) {
+                img.addEventListener('click', function() {
+                    // 클릭된 이미지의 src 속성을 가져옵니다.
+                    const src = img.getAttribute('src');
+
+                    // src 속성에서 drinkid 값을 추출합니다.
+                    const drinkId = getDrinkIdFromSrc(src);
+
+                    window.location.href = '/showpost?drinkId=' + drinkId;
+                });
+            });
+        });
+
+        // src 속성에서 drinkid 값을 추출하는 함수입니다.
+        function getDrinkIdFromSrc(src) {
+            // 예시: src는 "/image?drinkid=11000"와 같은 형태일 것으로 가정합니다.
+            const matches = src.match(/drinkid=(\d+)/);
+            if (matches && matches.length > 1) {
+                return matches[1];
+            }
+            return null;
+        }
+    </script>
+</head>
+<body>
+
+<div class="Header">
+    <div class="SearchInput">
+        <form action="/search_result" method="GET" class="SearchForm">
+            <input type="text" name="keyword" class="InputField" placeholder="칵테일 이름 검색">
+            <button type="submit" class="SearchButton">
+                <img src="/drawable/ic_search.png" alt="Search" class="SearchIcon">
+            </button>
+        </form>
+        <div class="RecentSearches">
+            <h2>Recent Searches</h2>
+            <ul class="RecentSearchList">
+                <li><a href="/showpost?drinkId=11000"><img class="Ckt_mini" src="/image?drinkid=11000" alt="Cocktail Image">모히또</a></li>
+                <li><a href="/showpost?drinkId=11007"><img class="Ckt_mini" src="/image?drinkid=11007" alt="Cocktail Image">마가리타</a></li>
+                <li><a href="/showpost?drinkId=11005"><img class="Ckt_mini" src="/image?drinkid=11005" alt="Cocktail Image">드라이 마티니</a></li>
+            </ul>
+        </div>
+    </div>
+    <img class="IcProfile1" src="/drawable/ic_profile.png" width="30" height="30"/>
+</div>
+
+<div class="MainFrame">
+    <div>
+        <img class="Ckt_Recom_Img" src="/image?drinkid=11000" alt="Cocktail Image">
+        <div >이용자 추천 칵테일</div>
+    </div>
+    <div>
+        <img class="Ckt_Recom_Img" src="/image?drinkid=11007" alt="Cocktail Image">
+        <div>운영자 추천 칵테일</div>
+    </div>
+    <div>
+        <img class="Ckt_Recom_Img" src="/image?drinkid=11008" alt="Cocktail Image">
+        <div>추천수 많은 칵테일</div>
+    </div>
+    <div>
+        <img class="Ckt_Recom_Img" src="/image?drinkid=11005" alt="Cocktail Image">
+        <div>가장 많이 검색된 칵테일</div>
+    </div>
+    <div>
+        <img class="Ckt_Recom_Img" src="/image?drinkid=12214" alt="Cocktail Image">
+        <div>운영자 추천 칵테일</div>
+    </div>
+    <div>
+        <img class="Ckt_Recom_Img" src="/image?drinkid=11288" alt="Cocktail Image">
+        <div>운영자 추천 칵테일</div>
+    </div>
+</div>
+
+<div class="TabBar">
+    <div class="Tabs">
+        <div class="TabBarItem" onclick="location.href='/main2'">
+            <img class="IcHome" src="/drawable/ic_home.png" />
+            <div>홈</div>
+        </div>
+        <div class="TabBarItem" onclick="location.href='/bookmarksckt'">
+            <img class="IcBookmark" src="/drawable/ic_bookmark.png" alt="My Image" />
+            <div>즐겨찾기</div>
+        </div>
+        <div class="TabBarItem" onclick="location.href='/recipes'">
+            <img class="IcCkt" src="/drawable/ic_ckt.png" />
+            <div>레시피</div>
+        </div>
+        <div class="TabBarItem" onclick="location.href='/settings'">
+            <img class="IcHome2" src="/drawable/ic_settings2.png" />
+            <div>설정</div>
+        </div>
+    </div>
+    <div class="HomeIndicator"></div>
+</div>
+
+</body>
+</html>

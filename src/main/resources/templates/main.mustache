@@ -1,0 +1,28 @@
+<!-- main.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>칵테일</title>
+</head>
+<body>
+<h1>Main Page</h1>
+<form action="/search" method="get">
+    <input type="text" name="keyword" placeholder="원하는 칵테일 이름 입력하시오">
+    <button type="submit">검색</button>
+    <!-- 알콜 버튼 -->
+    <button type="button" onclick="searchByCategory('alcohol')">알콜</button>
+    <!-- 논알콜 버튼 -->
+    <button type="button" onclick="searchByCategory('non-alcohol')">논알콜</button>
+</form>
+<script>
+    // 알콜 또는 논알콜 버튼을 클릭했을 때 호출되는 함수
+    function searchByCategory(category) {
+        // 현재 페이지 URL 가져오기
+        var currentUrl = window.location.href;
+        // 카테고리 값을 URL에 추가하여 전송
+        window.location.href = currentUrl + '?category=' + category;
+    }
+</script>
+</body>
+</html>
